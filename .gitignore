@@ -1,0 +1,94 @@
+# ===========================================================
+# Override user-global .gitignore for this repo
+# (the user's ~/.gitignore_global ignores 'figures' by default;
+# in this repo we WANT figures/*.csv and figures/*.parquet pushed)
+# ===========================================================
+!figures/
+!figures/**
+
+# ===========================================================
+# Licensed / proprietary research data -- do NOT publish
+# ===========================================================
+# CRSP, Compustat, IBES, and TAQ are WRDS-licensed datasets.
+# Redistribution of raw or near-raw extracts is prohibited.
+data/
+data_guide/
+
+# ===========================================================
+# Copyrighted paper text (JFE owns it)
+# ===========================================================
+TugOfWar.pdf
+TugOfWar.txt
+
+# ===========================================================
+# Internal session notes / sign-off checklists
+# (replaced on GitHub by the root README + code/README only)
+# ===========================================================
+HANDOFF.md
+WALKTHROUGH.md
+PIPELINE_AUDIT_REVIEW.md
+TAQ_FILTER_REVIEW.md
+VARIABLES_TO_VERIFY.md
+DATA_DICTIONARY.docx
+
+# ===========================================================
+# Build artefacts, logs, and exploratory notebooks
+# (may contain local paths / usernames)
+# ===========================================================
+logs/
+notebooks/
+
+# ===========================================================
+# One-off diagnostic scratch (kept locally for reference only;
+# results are already baked into 00_config.py and 06_taq_aggregate.py)
+# ===========================================================
+code/01b_diagnose_taq.py
+code/01c_diagnose_taq_coverage.py
+
+# ===========================================================
+# Python
+# ===========================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===========================================================
+# Jupyter checkpoints (notebooks/ as a whole is already ignored above)
+# ===========================================================
+.ipynb_checkpoints/
+
+# ===========================================================
+# Editor / OS / Claude
+# ===========================================================
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+.claude/
+
+# ===========================================================
+# Parquet / temp data files anywhere in the tree
+# (whitelist figures/ -- those are small derived-statistic outputs)
+# ===========================================================
+*.parquet
+*.parquet.tmp
+*.tmp
+!figures/*.parquet
