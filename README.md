@@ -28,7 +28,7 @@ Block B (2014-2024 OOS) tells a more nuanced story: momentum-family anomalies st
 
 ### Why two blocks?
 
-The paper's window is 1993-2013, but WRDS **TAQ Millisecond starts 2003-09-10**.  Before that date there is no millisecond-precision intraday data, so the paper's 9:30-10:00 VWAP "open price" cannot be reproduced.  We therefore split the analysable window into:
+The paper's window is 1993-2013, but my institution's data access of WRDS **TAQ Millisecond starts 2003-09-10**.  Before that date there is no millisecond-precision intraday data, so the paper's 9:30-10:00 VWAP "open price" cannot be reproduced. I therefore split the analysable window into:
 
 - **Block A: 2003-10 to 2013-12** -- the overlap with LPS, used as the strict replication block.  About half of the paper's window in months (122 vs 252) and the half during which most anomalies are weaker, so magnitude shortfalls vs paper are expected.
 - **Block B: 2014-01 to 2024-12** -- out-of-sample extension, used to study post-publication decay / persistence.
