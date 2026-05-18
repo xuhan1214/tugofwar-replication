@@ -24,15 +24,50 @@ Tables 3 (futures), 6-8 (institutional holdings) are not reproduced -- they requ
 
 Block B (2014-2024 OOS) tells a more nuanced story: momentum-family anomalies strengthen; risk- and accounting-anomalies largely decay or reverse.  See the CSV outputs for the full breakdown.
 
-## Important: data not included
+## Data
 
-This repository contains **code and aggregated results only**.  The underlying raw data are licensed and cannot be redistributed:
+### Why two blocks?
 
-- **CRSP**, **Compustat**, **IBES**, **TAQ Millisecond** -- WRDS-licensed.
-- **Fama-French factors** -- available via WRDS or Ken French's website.
-- **Original paper PDF** -- copyrighted by *Journal of Financial Economics*.
+The paper's window is 1993-2013, but WRDS **TAQ Millisecond starts 2003-09-10**.  Before that date there is no millisecond-precision intraday data, so the paper's 9:30-10:00 VWAP "open price" cannot be reproduced.  We therefore split the analysable window into:
 
-To run the pipeline end-to-end you need a WRDS subscription with access to the listed schemas.  See `code/README.md` for the full setup and run order.
+- **Block A: 2003-10 to 2013-12** -- the overlap with LPS, used as the strict replication block.  About half of the paper's window in months (122 vs 252) and the half during which most anomalies are weaker, so magnitude shortfalls vs paper are expected.
+- **Block B: 2014-01 to 2024-12** -- out-of-sample extension, used to study post-publication decay / persistence.
+
+The pre-2003 legacy second-precision TAQ tables (`taq.ct_<YYYYMM>`) **are** available in WRDS, but their VWAP construction differs materially from the millisecond product; we intentionally do not mix them.
+
+### Required raw data (all licensed; not in this repo)
+
+| Source | What we pull | Approx. local size |
+|---|---|---|
+| `crsp.dsf` | daily stock file, 1993-2024 | ~1.2 GB |
+| `crsp.msf` | monthly stock file, 1993-2024 | ~80 MB |
+| `crsp.stocknames` + `crsp.dsedelist` | security history + delisting events | ~4 MB |
+| `comp.funda` + `comp.fundq` | Compustat annual + quarterly fundamentals, 1990-2024 | ~85 MB |
+| `crsp.ccmxpf_lnkhist` | CRSP-Compustat gvkey-permno link | ~1 MB |
+| `ibes.statsumu_epsus` + `ibes.actu_epsus` | IBES consensus + actuals (for SUE) | ~10 MB |
+| `wrdsapps.ibcrsphist` | IBES-CRSP link, `score <= 3` | ~1 MB |
+| `wrdsapps.taqmclink` | TAQ-CRSP link, `match_lvl <= 2` | ~50 MB |
+| `taqmsec.ctm_<YYYYMMDD>` | TAQ Millisecond consolidated trades, 2003-09 to 2024-12 (one parquet per year after server-side aggregation) | ~3.2 GB |
+| `ff.factors_daily` + `ff.factors_monthly` | Fama-French 3 factors + UMD | <1 MB |
+
+Total local cache after running the full pipeline: roughly **9.4 GB**.
+
+### After cleaning
+
+After applying LPS sample filters (`shrcd in {10,11}`, `exchcd in {1,2,3}`, price floor 5 USD, exclude bottom NYSE size quintile) the monthly stock-month panel sizes are:
+
+- Block A: 220,971 stock-months over 122 months
+- Block B: 256,755 stock-months over 131 months
+
+(Paper Table 4 reports 454,825 stock-months over 1993-2013; our two blocks combined are 477,726.)
+
+### How to obtain the data
+
+- **WRDS subscription** with access to the listed schemas is the only way to reproduce.
+- The Fama-French factors are also free from Ken French's website if you do not want to pull them via WRDS.
+- The paper PDF is behind the *Journal of Financial Economics* paywall and is not redistributable.
+
+To rebuild every parquet from scratch with the pipeline scripts, see `code/README.md`.
 
 ## Repository layout
 
